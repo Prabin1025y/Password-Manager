@@ -47,21 +47,11 @@ const Manager = () => {
 	};
 
 	const handleDelete = (id) => {
-		setusers(users.filter(item => item.id !== id));
-		localStorage.setItem("userData", JSON.stringify(users.filter(item => item.id !== id)));
-	}
-
-	const handleEdit = () => {
-
-	}
-
-	const handleAddData = e => {
-		e.preventDefault();
-		if (userData.sitename && userData.username && userData.password) {
-			setusers([...users, userData]);
-			localStorage.setItem("userData", JSON.stringify([...users, { ...userData, id: uuidv4() }]));
-
-			toast.success("Credentials Added Successfully", {
+		let c = confirm("Do you really want to delete this data?")
+		if (c) {
+			setusers(users.filter(item => item.id !== id));
+			localStorage.setItem("userData", JSON.stringify(users.filter(item => item.id !== id)));
+			toast.success("Data Deleted!!", {
 				position: "bottom-right",
 				autoClose: 4000,
 				hideProgressBar: false,
@@ -70,7 +60,55 @@ const Manager = () => {
 				draggable: false,
 				progress: undefined,
 				theme: "colored",
-			});
+			})
+		}
+	}
+
+	const handleEdit = (id) => {
+		setuserData(users.filter(item => item.id === id)[0]);
+	}
+
+	const handleAddData = e => {
+		e.preventDefault();
+		if (userData.sitename && userData.username && userData.password) {
+			if (userData.id) {
+				let index = users.findIndex(item => item.id === userData.id);
+				// let updatedArray = users;
+				console.log(index);
+
+				if (index !== -1) {
+					// updatedArray = [...users.slice(0, index),
+					// 	userData,
+					// ...users.slice(index + 1)];
+					console.log(users.slice(index + 1))
+					setusers([...users.slice(0, index), userData, ...users.slice(index + 1)]);
+					localStorage.setItem("userData", JSON.stringify([...users.slice(0, index), userData, ...users.slice(index + 1)]));
+					toast.success("Credentials Updated", {
+						position: "bottom-right",
+						autoClose: 4000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: false,
+						draggable: false,
+						progress: undefined,
+						theme: "colored",
+					});
+				}
+			} else {
+				setusers([...users, { ...userData, id: uuidv4() }]);
+				localStorage.setItem("userData", JSON.stringify([...users, { ...userData, id: uuidv4() }]));
+
+				toast.success("Credentials Saved", {
+					position: "bottom-right",
+					autoClose: 4000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: false,
+					draggable: false,
+					progress: undefined,
+					theme: "colored",
+				});
+			}
 		} else {
 			toast.error("Please Fill all Credentials", {
 				position: "bottom-right",
@@ -102,7 +140,7 @@ const Manager = () => {
 	// console.log(users);
 	return (
 		<>
-			<ToastContainer />
+			<ToastContainer pauseOnFocusLoss={false} />
 			<div className="absolute inset-0 -z-10 h-full w-full bg-sky-50 bg-[linear-gradient(to_right,#0ea5e90a_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e90a_1px,transparent_1px)] bg-[size:14px_24px]">{/* <div class="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-sky-500 opacity-20 blur-[100px]"></div> */}</div>
 			<div className=" container mx-auto p-10 flex flex-col items-center">
 				<h1 className="text-3xl font-bold">
@@ -123,7 +161,7 @@ const Manager = () => {
 					<button onClick={handleAddData} className="bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors duration-400 p-3 w-fit flex" type="submit">
 						{/* <img src="Gifs/add-file.gif" alt="" /> */}
 						<lord-icon src="https://cdn.lordicon.com/jgnvfzqg.json" trigger="hover" colors="primary:#ffffff" style={{ width: "25px", height: "25px" }}></lord-icon>
-						Add Credentials
+						SAve
 					</button>
 				</form>
 				{users.length === 0 && <div>No Passwords Saved.</div>}
@@ -143,7 +181,7 @@ const Manager = () => {
 									<td className="px-6 py-4 border-b border-sky-700">{item.sitename}</td>
 									<td className="px-6 py-4 border-b border-sky-700"><div onClick={() => copyText(item.username)} className="flex gap-2">{item.username}<img className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></div></td>
 									<td className="px-6 py-4 border-b border-sky-700"><div onClick={() => copyText(item.password)} className="flex gap-2">{item.password}<img className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></div></td>
-									<td className="px-6 py-4 border-b border-sky-700"><div className="flex gap-3"><img className="cursor-pointer" onClick={handleEdit} src="svgs/edit.svg" alt="Edit" /><img className="cursor-pointer" onClick={() => handleDelete(item.id)} src="svgs/delete.svg" alt="Delete" /></div></td>
+									<td className="px-6 py-4 border-b border-sky-700"><div className="flex gap-3"><img className="cursor-pointer" onClick={() => handleEdit(item.id)} src="svgs/edit.svg" alt="Edit" /><img className="cursor-pointer" onClick={() => handleDelete(item.id)} src="svgs/delete.svg" alt="Delete" /></div></td>
 								</tr>
 							})}
 
