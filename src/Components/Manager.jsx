@@ -151,7 +151,7 @@ const Manager = () => {
 					<section className="w-full">
 						<input required value={userData.sitename} onChange={handleChange} name="sitename" placeholder="Enter The Website..." className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg" type="text" />
 					</section>
-					<section className="flex gap-12 w-full">
+					<section className="flex gap-3 flex-col sm:flex-row md:gap-12 w-full">
 						<input required value={userData.username} onChange={handleChange} name="username" placeholder="Enter Username" className="border p-1 focus-visible:outline-sky-700 text-sky-800 focus:border-sky-700 border-sky-500 rounded-full w-full text-sm lg:text-lg" type="text" />
 						<div className="w-full  relative">
 							<input required value={userData.password} onChange={handleChange} name="password" ref={passwordInputRef} placeholder="Enter Password" className="border p-1 focus-visible:outline-sky-700 text-sky-800 focus:border-sky-700 border-sky-500 rounded-full w-full text-sm lg:text-lg" type="password" />
@@ -168,7 +168,7 @@ const Manager = () => {
 				{users.length === 0 && <div>No Passwords Saved.</div>}
 				{users.length !== 0 && <div className="w-full">
 
-					<table className="min-w-full bg-sky-100 hidden">
+					<table className="min-w-full bg-sky-100 hidden md:table">
 						<thead>
 							<tr className="bg-sky-800 text-white">
 								<th className="px-6 py-3 text-left text-sm leading-4 uppercase tracking-wider">Site</th>
@@ -189,18 +189,21 @@ const Manager = () => {
 
 						</tbody>
 					</table>
-					<section>
-						<div className="bg-sky-100 overflow-hidden rounded-xl">
-							<h2 className="bg-sky-800 text-white px-3 py-1">SiteNAme</h2>
-							<div className="p-1 pl-8">
-								<p>username:dkhflskdj</p>
-								<p>password:dkhflskdj</p>
-								<div className="flex gap-3 text-lg">
-									<img className="cursor-pointer" onClick={() => handleEdit(item.id)} src="svgs/edit.svg" alt="Edit" />
-									<img className="cursor-pointer" onClick={() => handleDelete(item.id)} src="svgs/delete.svg" alt="Delete" />
+					<section className="overflow-hidden rounded-xl visible md:hidden">
+						{users.map((item, index) => {
+							return <div key={index} className="bg-sky-100  pb-4">
+								<div className="bg-sky-800 text-white px-3 py-1 max-w-full flex flex-wrap">{item.sitename}</div>
+								<div className="p-1 pl-8">
+									<p className="flex gap-2 flex-wrap"><span className="font-bold">username:</span> {item.username}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></p>
+									<p className="flex gap-2"><span className="font-bold">password:</span> {item.password}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></p>
+									<div className="flex gap-3 text-lg">
+										<img className="cursor-pointer" onClick={() => handleEdit(item.id)} src="svgs/edit.svg" alt="Edit" />
+										<img className="cursor-pointer" onClick={() => handleDelete(item.id)} src="svgs/delete.svg" alt="Delete" />
+									</div>
 								</div>
 							</div>
-						</div>
+						})}
+
 					</section>
 				</div>
 				}
