@@ -192,7 +192,7 @@ const Manager = () => {
 					<section className="overflow-hidden rounded-xl visible md:hidden">
 						{users.map((item, index) => {
 							return <div key={index} className="bg-sky-100  pb-4">
-								<div className="bg-sky-800 text-white px-3 py-1 max-w-full flex flex-wrap">{item.sitename}</div>
+								<div className="bg-sky-800 text-white px-3 py-1">{item.sitename}</div>
 								<div className="p-1 pl-8">
 									<p className="flex gap-2 flex-wrap"><span className="font-bold">username:</span> {item.username}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></p>
 									<p className="flex gap-2"><span className="font-bold">password:</span> {item.password}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></p>
