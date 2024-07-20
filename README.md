@@ -1,4 +1,4 @@
-# PassGuard
+# <span style="color: #0ea5e9;">&#123;</span> Pass<span style="color: #0ea5e9;">Guard</span> <span style="color: #0ea5e9;">&#125;</span>
 
 Welcome to **PassGuard**! Where security meets simplicity. Manage your passwords with ease and confidence using this lightweight, user-friendly application built with React. PassGuard ensures that your credentials are safely stored and readily accessible whenever you need them.
 
