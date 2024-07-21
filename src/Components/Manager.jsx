@@ -21,11 +21,22 @@ const Manager = () => {
 		passwordInputRef.current.type = passwordVisible ? "text" : "password";
 	}, [passwordVisible]);
 
-	useEffect(() => {
-		let data = JSON.parse(localStorage.getItem("userData"));
+	const getPasswords = async () => {
+		let res = await fetch("http://localhost:3000/");
+		let data = await res.json();
+
 		// console.log(data);
 		if (data)
 			setusers(data)
+	};
+
+	useEffect(() => {
+		//While Using Local Storage
+		// let data = JSON.parse(localStorage.getItem("userData"));
+
+		//Using MongoDB
+		getPasswords();
+
 	}, [])
 
 	useEffect(() => {
@@ -46,11 +57,18 @@ const Manager = () => {
 		setuserData(prevstate => ({ ...prevstate, [e.target.name]: e.target.value }));
 	};
 
-	const handleDelete = (id) => {
+	const handleDelete = async (id) => {
 		let c = confirm("Do you really want to delete this data?")
 		if (c) {
-			setusers(users.filter(item => item.id !== id));
-			localStorage.setItem("userData", JSON.stringify(users.filter(item => item.id !== id)));
+			//Using local storage
+			// setusers(users.filter(item => item.id !== id));
+			// localStorage.setItem("userData", JSON.stringify(users.filter(item => item.id !== id)));
+
+			//Using MongoDB
+			await fetch("http://localhost:3000/delete/" + id);
+			getPasswords();
+
+
 			toast.success("Data Deleted!!", {
 				position: "bottom-right",
 				autoClose: 4000,
@@ -68,7 +86,7 @@ const Manager = () => {
 		setuserData(users.filter(item => item.id === id)[0]);
 	}
 
-	const handleAddData = e => {
+	const handleAddData = async e => {
 		e.preventDefault();
 		if (userData.sitename && userData.username && userData.password) {
 			if (userData.id) {
@@ -96,7 +114,24 @@ const Manager = () => {
 				}
 			} else {
 				setusers([...users, { ...userData, id: uuidv4() }]);
-				localStorage.setItem("userData", JSON.stringify([...users, { ...userData, id: uuidv4() }]));
+
+				// while using local storage
+				// localStorage.setItem("userData", JSON.stringify([...users, { ...userData, id: uuidv4() }]));
+				console.log("HAHAHA");
+				//while using mongodb
+				await fetch("http://localhost:3000/", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ ...userData, id: uuidv4() })
+					// body : JSON.stringify([...users, { ...userData, id: uuidv4() }])
+					// body: JSON.stringify({ name: "Prabon Acharya" })
+				})
+
+
+
+
 
 				toast.success("Credentials Saved", {
 					position: "bottom-right",
@@ -183,7 +218,7 @@ const Manager = () => {
 									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700">{item.sitename}</td>
 									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-2">{item.username}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></div></td>
 									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-2">{item.password}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></div></td>
-									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-3"><img className="cursor-pointer" onClick={() => handleEdit(item.id)} src="svgs/edit.svg" alt="Edit" /><img className="cursor-pointer" onClick={() => handleDelete(item.id)} src="svgs/delete.svg" alt="Delete" /></div></td>
+									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-3"><img className="cursor-pointer" onClick={() => handleEdit(item.id)} src="svgs/edit.svg" alt="Edit" /><img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="svgs/delete.svg" alt="Delete" /></div></td>
 								</tr>
 							})}
 
@@ -198,7 +233,7 @@ const Manager = () => {
 									<p className="flex gap-2"><span className="font-bold">password:</span> {item.password}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></p>
 									<div className="flex gap-3 text-lg">
 										<img className="cursor-pointer" onClick={() => handleEdit(item.id)} src="svgs/edit.svg" alt="Edit" />
-										<img className="cursor-pointer" onClick={() => handleDelete(item.id)} src="svgs/delete.svg" alt="Delete" />
+										<img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="svgs/delete.svg" alt="Delete" />
 									</div>
 								</div>
 							</div>
