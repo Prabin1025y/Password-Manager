@@ -17,20 +17,29 @@ app.get("/", async (req, res) => {
     res.send(passwords);
 })
 
-app.get("/delete/:id",async (req,res)=>{
+app.get("/delete/:id", async (req, res) => {
     await PasswordDB.findByIdAndDelete(req.params.id);
     console.log("Data Deleted With ID " + req.params.id);
     res.redirect("/");
 })
 
+app.post("/edit/:id", async (req, res) => {
+    const { sitename, username, password } = req.body;
+    await PasswordDB.findByIdAndUpdate(req.params.id, {
+        sitename,
+        username,
+        password
+    })
+    console.log("Data Updated With ID " + req.params.id);
+    res.redirect("/");
+})
+
 app.post("/", async (req, res) => {
-    console.log("Hello");
-    console.log(req.body);
+    console.log("Data Inserted Successfully");
     res.send(req.body);
-    const { sitename, username, password, id } = req.body;
+    const { sitename, username, password } = req.body;
 
     await PasswordDB.create({
-        passwordId: id,
         sitename,
         username,
         password,

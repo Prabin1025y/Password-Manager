@@ -4,9 +4,6 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const passwordSchema = new Schema({
-    passwordId: {
-        type: String,
-    },
     sitename: {
         type: String,
     },

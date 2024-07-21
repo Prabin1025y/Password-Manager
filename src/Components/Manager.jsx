@@ -21,14 +21,6 @@ const Manager = () => {
 		passwordInputRef.current.type = passwordVisible ? "text" : "password";
 	}, [passwordVisible]);
 
-	const getPasswords = async () => {
-		let res = await fetch("http://localhost:3000/");
-		let data = await res.json();
-
-		// console.log(data);
-		if (data)
-			setusers(data)
-	};
 
 	useEffect(() => {
 		//While Using Local Storage
@@ -45,6 +37,15 @@ const Manager = () => {
 
 
 
+	const getPasswords = async () => {
+		let res = await fetch("http://localhost:3000/");
+		let data = await res.json();
+
+		// console.log(data);
+		if (data)
+			setusers(data)
+	};
+
 
 
 
@@ -58,6 +59,7 @@ const Manager = () => {
 	};
 
 	const handleDelete = async (id) => {
+		// console.log(id);
 		let c = confirm("Do you really want to delete this data?")
 		if (c) {
 			//Using local storage
@@ -83,14 +85,14 @@ const Manager = () => {
 	}
 
 	const handleEdit = (id) => {
-		setuserData(users.filter(item => item.id === id)[0]);
+		setuserData(users.filter(item => item._id === id)[0]);
 	}
 
 	const handleAddData = async e => {
 		e.preventDefault();
 		if (userData.sitename && userData.username && userData.password) {
-			if (userData.id) {
-				let index = users.findIndex(item => item.id === userData.id);
+			if (userData._id) {
+				let index = users.findIndex(item => item._id === userData._id);
 				// let updatedArray = users;
 				console.log(index);
 
@@ -98,9 +100,23 @@ const Manager = () => {
 					// updatedArray = [...users.slice(0, index),
 					// 	userData,
 					// ...users.slice(index + 1)];
-					console.log(users.slice(index + 1))
-					setusers([...users.slice(0, index), userData, ...users.slice(index + 1)]);
-					localStorage.setItem("userData", JSON.stringify([...users.slice(0, index), userData, ...users.slice(index + 1)]));
+					// setusers([...users.slice(0, index), userData, ...users.slice(index + 1)]);
+
+					//Using Local Storage
+					// localStorage.setItem("userData", JSON.stringify([...users.slice(0, index), userData, ...users.slice(index + 1)]));
+
+					//Using MongoDB
+					await fetch("http://localhost:3000/edit/" + userData._id, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify(userData)
+					})
+
+					getPasswords();
+
+
 					toast.success("Credentials Updated", {
 						position: "bottom-right",
 						autoClose: 4000,
@@ -113,21 +129,23 @@ const Manager = () => {
 					});
 				}
 			} else {
-				setusers([...users, { ...userData, id: uuidv4() }]);
+				// setusers([...users, userData]);
+				// console.log(userData);
 
 				// while using local storage
 				// localStorage.setItem("userData", JSON.stringify([...users, { ...userData, id: uuidv4() }]));
-				console.log("HAHAHA");
+
+
 				//while using mongodb
 				await fetch("http://localhost:3000/", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ ...userData, id: uuidv4() })
-					// body : JSON.stringify([...users, { ...userData, id: uuidv4() }])
-					// body: JSON.stringify({ name: "Prabon Acharya" })
+					body: JSON.stringify(userData)
 				})
+
+				getPasswords();
 
 
 
@@ -218,7 +236,7 @@ const Manager = () => {
 									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700">{item.sitename}</td>
 									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-2">{item.username}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></div></td>
 									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-2">{item.password}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></div></td>
-									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-3"><img className="cursor-pointer" onClick={() => handleEdit(item.id)} src="svgs/edit.svg" alt="Edit" /><img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="svgs/delete.svg" alt="Delete" /></div></td>
+									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-3"><img className="cursor-pointer" onClick={() => handleEdit(item._id)} src="svgs/edit.svg" alt="Edit" /><img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="svgs/delete.svg" alt="Delete" /></div></td>
 								</tr>
 							})}
 
@@ -232,7 +250,7 @@ const Manager = () => {
 									<p className="flex gap-2 flex-wrap"><span className="font-bold">username:</span> {item.username}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></p>
 									<p className="flex gap-2"><span className="font-bold">password:</span> {item.password}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></p>
 									<div className="flex gap-3 text-lg">
-										<img className="cursor-pointer" onClick={() => handleEdit(item.id)} src="svgs/edit.svg" alt="Edit" />
+										<img className="cursor-pointer" onClick={() => handleEdit(item._id)} src="svgs/edit.svg" alt="Edit" />
 										<img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="svgs/delete.svg" alt="Delete" />
 									</div>
 								</div>
