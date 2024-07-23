@@ -21,7 +21,9 @@ app.get("/delete/:id", async (req, res) => {
     await PasswordDB.findByIdAndDelete(req.params.id);
     console.log("Data Deleted With ID " + req.params.id);
     res.redirect("/");
-})
+}
+
+)
 
 app.post("/edit/:id", async (req, res) => {
     const { sitename, username, password } = req.body;

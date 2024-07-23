@@ -202,12 +202,12 @@ const Manager = () => {
 				<h3 className="text-sky-500">Where Security Meets Simplicity</h3>
 				<form className="flex flex-col gap-4 w-full md:w-11/12 lg:w-1/2 my-8 items-center" action="">
 					<section className="w-full">
-						<input required value={userData.sitename} onChange={handleChange} name="sitename" placeholder="Enter The Website..." className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg" type="text" />
+						<input required value={userData.sitename} onChange={handleChange} name="sitename" placeholder="Enter The Website..." className="rounded-full p-1 px-3 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg" type="text" />
 					</section>
 					<section className="flex gap-3 flex-col sm:flex-row md:gap-12 w-full">
-						<input required value={userData.username} onChange={handleChange} name="username" placeholder="Enter Username" className="border p-1 focus-visible:outline-sky-700 text-sky-800 focus:border-sky-700 border-sky-500 rounded-full w-full text-sm lg:text-lg" type="text" />
+						<input required value={userData.username} onChange={handleChange} name="username" placeholder="Enter Username" className="border p-1 px-3 focus-visible:outline-sky-700 text-sky-800 focus:border-sky-700 border-sky-500 rounded-full w-full text-sm lg:text-lg" type="text" />
 						<div className="w-full  relative">
-							<input required value={userData.password} onChange={handleChange} name="password" ref={passwordInputRef} placeholder="Enter Password" className="border p-1 focus-visible:outline-sky-700 text-sky-800 focus:border-sky-700 border-sky-500 rounded-full w-full text-sm lg:text-lg" type="password" />
+							<input required value={userData.password} onChange={handleChange} name="password" ref={passwordInputRef} placeholder="Enter Password" className="border p-1 px-3 focus-visible:outline-sky-700 text-sky-800 focus:border-sky-700 border-sky-500 rounded-full w-full text-sm lg:text-lg" type="password" />
 							<img ref={visibleRef} className="absolute top-[5px] right-[8px] cursor-pointer" onClick={handleToogleVisible} src="svgs/notVisible.svg" alt="" />
 						</div>
 					</section>
