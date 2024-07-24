@@ -2,6 +2,7 @@ import express from 'express';
 import ConnectToDB from './database/databaseConnection.js';
 import PasswordDB from './model/PasswordModel.js';
 import cors from "cors";
+import UserDB from './model/UserModel.js';
 const PORT = 3000;
 
 const app = express();
@@ -48,6 +49,29 @@ app.post("/", async (req, res) => {
         userID: 1,
     })
 })
+
+app.post("/register", async (req, res) => {
+
+    //console.log(req.body);
+    const { fullname, username, password, email } = req.body;
+    try {
+        await UserDB.create({
+            fullname,
+            username,
+            password,
+            email,
+        });
+        res.send({ usercreated: true });
+    } catch (error) {
+        if (error.code === 11000) {
+            res.send({ usercreated: false, duplicatedkey: Object.keys(error.keyValue)[0], errorcode: error.code })
+        } else {
+            res.send({ usercreated: false, errorcode: error.code })
+        }
+    }
+
+})
+
 
 app.listen(PORT, () => {
     console.log("Listening to port number " + PORT);

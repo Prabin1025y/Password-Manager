@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ToastContainer,toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 const Register = () => {
 
@@ -53,7 +53,7 @@ const Register = () => {
             setPasswordVisible(prev => ({ ...passwordVisible, p2: !passwordVisible.p2 }))
     }
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
         if (passwordRef.current.value !== confirmPasswordRef.current.value) {
             toast.error('Passwords didn\'t matched', {
@@ -66,17 +66,54 @@ const Register = () => {
                 progress: undefined,
                 theme: "colored",
             });
-        }else{
-            toast.success('Registration Successful', {
-                position: "bottom-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-            });
+        } else {
+
+            let res = await fetch("http://localhost:3000/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(registrationData)
+            })
+            let data = await res.json();
+            if (data.usercreated) {
+                toast.success('Registration Successful', {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            } else if (!data.usercreated && data.errorcode === 11000) {
+                console.log(data.duplicatedkey);
+                toast.error(data.duplicatedkey === "username" ? "username not available" : "email is already in use", {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            } else {
+                toast.error(`Error in registering. error code ${data.errorcode}`, {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            }
+
+
+
         }
     }
 
