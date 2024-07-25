@@ -3,11 +3,23 @@ import { ToastContainer, toast } from "react-toastify";
 
 const Register = () => {
 
+    const errorStyle = {
+        borderColor: "red",
+        backgroundColor: "#ffe6e6"
+    }
+
+    const okStyle = {
+        borderColor: "#0ea5e9",
+        backgroundColor: "#ffffff"
+    }
+
     const visibleEyeSvg = "svgs/visible.svg";
     const notVisibleEyeSvg = "svgs/notVisible.svg";
 
     const confirmPasswordRef = useRef();
     const passwordRef = useRef();
+    const usernameRef = useRef();
+    const emailRef = useRef();
 
     const [registrationData, setregistrationData] = useState({
         fullname: "",
@@ -41,6 +53,23 @@ const Register = () => {
 
 
 
+    const applyStyles = (element, styles) => {
+        for (const property in styles) {
+            if (styles.hasOwnProperty(property)) {
+                element.style[property] = styles[property]
+            }
+        }
+    }
+
+    const resetStyle = () => {
+        applyStyles(passwordRef.current, okStyle);
+        applyStyles(confirmPasswordRef.current, okStyle);
+        applyStyles(usernameRef.current, okStyle);
+        applyStyles(emailRef.current, okStyle);
+    }
+
+
+
 
     const handleChange = e => {
         setregistrationData(prevstate => ({ ...registrationData, [e.target.name]: e.target.value }));
@@ -66,6 +95,12 @@ const Register = () => {
                 progress: undefined,
                 theme: "colored",
             });
+
+            resetStyle();
+            applyStyles(passwordRef.current, errorStyle);
+            applyStyles(confirmPasswordRef.current, errorStyle);
+
+
         } else {
 
             let res = await fetch("http://localhost:3000/register", {
@@ -87,6 +122,12 @@ const Register = () => {
                     progress: undefined,
                     theme: "colored",
                 });
+
+                resetStyle();
+                setregistrationData({ fullname: "", username: "", password: "", email: "" })
+                confirmPasswordRef.current.value = "";
+
+
             } else if (!data.usercreated && data.errorcode === 11000) {
                 console.log(data.duplicatedkey);
                 toast.error(data.duplicatedkey === "username" ? "username not available" : "email is already in use", {
@@ -99,6 +140,14 @@ const Register = () => {
                     progress: undefined,
                     theme: "colored",
                 });
+                if (data.duplicatedkey === "username") {
+                    console.log("error");
+                    resetStyle();
+                    applyStyles(usernameRef.current, errorStyle);
+                } else {
+                    resetStyle();
+                    applyStyles(emailRef.current, errorStyle);
+                }
             } else {
                 toast.error(`Error in registering. error code ${data.errorcode}`, {
                     position: "bottom-right",
@@ -111,8 +160,6 @@ const Register = () => {
                     theme: "colored",
                 });
             }
-
-
 
         }
     }
@@ -131,7 +178,7 @@ const Register = () => {
                         <label className="text-lg font-bold px-4  text-sky-600" htmlFor="fullname">Full Name:</label>
                         <input
                             onChange={handleChange}
-                            value={registrationData.fullName}
+                            value={registrationData.fullname}
                             required
                             name="fullname"
                             placeholder="Enter Full Name"
@@ -142,8 +189,9 @@ const Register = () => {
                     <section className="w-full">
                         <label className="text-lg font-bold px-4  text-sky-600" htmlFor="username">Username:</label>
                         <input
+                            ref={usernameRef}
                             onChange={handleChange}
-                            value={registrationData.userName}
+                            value={registrationData.username}
                             required
                             name="username"
                             placeholder="Enter Username"
@@ -154,6 +202,7 @@ const Register = () => {
                     <section className="w-full">
                         <label className="text-lg font-bold px-4  text-sky-600" htmlFor="email">Email:</label>
                         <input
+                            ref={emailRef}
                             onChange={handleChange}
                             value={registrationData.email}
                             required
