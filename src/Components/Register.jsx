@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
 const Register = () => {
@@ -20,6 +21,7 @@ const Register = () => {
     const passwordRef = useRef();
     const usernameRef = useRef();
     const emailRef = useRef();
+    const navigate = useNavigate();
 
     const [registrationData, setregistrationData] = useState({
         fullname: "",
@@ -49,14 +51,14 @@ const Register = () => {
             confirmPasswordRef.current.type = "password";
         }
 
-    }, [passwordVisible])
+    }, [passwordVisible]);
 
 
 
     const applyStyles = (element, styles) => {
         for (const property in styles) {
             if (styles.hasOwnProperty(property)) {
-                element.style[property] = styles[property]
+                element.style[property] = styles[property];
             }
         }
     }
@@ -72,6 +74,7 @@ const Register = () => {
 
 
     const handleChange = e => {
+        resetStyle();
         setregistrationData(prevstate => ({ ...registrationData, [e.target.name]: e.target.value }));
     }
 
@@ -124,8 +127,10 @@ const Register = () => {
                 });
 
                 resetStyle();
-                setregistrationData({ fullname: "", username: "", password: "", email: "" })
-                confirmPasswordRef.current.value = "";
+                // setregistrationData({ fullname: "", username: "", password: "", email: "" })
+                // confirmPasswordRef.current.value = "";
+                navigate("/login");
+
 
 
             } else if (!data.usercreated && data.errorcode === 11000) {
@@ -166,7 +171,7 @@ const Register = () => {
 
 
     return (<>
-        <ToastContainer pauseOnFocusLoss={false} />
+        {/* <ToastContainer pauseOnFocusLoss={false} /> */}
         <div className="fixed inset-0 -z-10 h-full w-full bg-sky-50 bg-[linear-gradient(to_right,#0ea5e90a_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e90a_1px,transparent_1px)] bg-[size:14px_24px]">
             <div className="container mx-auto p-10 flex flex-col items-center">
                 <h1 className="text-3xl font-bold">

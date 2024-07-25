@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Navbar from "./Navbar";
 
 const Manager = () => {
 	const [passwordVisible, setPasswordVisible] = useState(false);
@@ -193,7 +194,8 @@ const Manager = () => {
 	// console.log(users);
 	return (
 		<>
-			<ToastContainer pauseOnFocusLoss={false} />
+			<Navbar />
+			{/* <ToastContainer pauseOnFocusLoss={false} /> */}
 			<div className="fixed inset-0 -z-10 h-full w-full bg-sky-50 bg-[linear-gradient(to_right,#0ea5e90a_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e90a_1px,transparent_1px)] bg-[size:14px_24px]">{/* <div class="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-sky-500 opacity-20 blur-[100px]"></div> */}</div>
 			<div className="container mx-auto p-10 flex flex-col items-center">
 				<h1 className=" text-3xl font-bold">

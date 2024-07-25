@@ -3,6 +3,7 @@ import ConnectToDB from './database/databaseConnection.js';
 import PasswordDB from './model/PasswordModel.js';
 import cors from "cors";
 import UserDB from './model/UserModel.js';
+import bcrypt from 'bcrypt';
 const PORT = 3000;
 
 const app = express();
@@ -58,7 +59,7 @@ app.post("/register", async (req, res) => {
         await UserDB.create({
             fullname,
             username,
-            password,
+            password: bcrypt.hashSync(password, 12),
             email,
         });
         res.send({ usercreated: true });
@@ -70,6 +71,30 @@ app.post("/register", async (req, res) => {
         }
     }
 
+})
+
+app.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+    const user = await UserDB.findOne({
+        $or: [
+            { username },
+            { email: username }
+        ]
+    });
+    try {
+        console.log(user);
+        if (user) {
+            if (bcrypt.compareSync(password, user.password))
+                res.send({ userfound: true, error: false, fullname: user.fullname, userid: user._id });
+            else
+                res.send({ userfound: false, error: false, incorrectfield: "password" });
+
+        } else {
+            res.send({ userfound: false, error: false, incorrectfield: "username" });
+        }
+    } catch {
+        res.send({ userfound: false, error: true });
+    }
 })
 
 

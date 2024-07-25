@@ -1,21 +1,36 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { ToastContainer } from "react-toastify";
+import Login from "./Components/Login";
 import Manager from "./Components/Manager";
-import Navbar from "./Components/Navbar";
-import Login from "./Components/Register";
 import Register from "./Components/Register";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 // import './App.css'
 
+
 function App() {
+	const router = createBrowserRouter([
+		{
+			path: "/",
+			element: <Manager />,
+		},
+		{
+			path: "/login",
+			element: <Login />,
+		},
+		{
+			path: "/register",
+			element: <Register />,
+		},
+	]);
 
 	return (
 		<>
+			<ToastContainer pauseOnFocusLoss={false} />
+			<RouterProvider router={router} />
 			{/* <Navbar /> */}
 			{/* <Manager /> */}
 			{/* <Login /> */}
-			<Register />
+			{/* <Register /> */}
 		</>
 	);
 }

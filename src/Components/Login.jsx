@@ -1,24 +1,88 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toastSuccess, toastError } from "../Utilities/toast";
+// import { toast } from "react-toastify";
 
 const Login = () => {
-    // const [passwordVisible, setPasswordVisible] = useState(false);
-    // const [loginData, setLoginData] = useState({ username: "", password: "" });
+    const errorStyle = {
+        borderColor: "red",
+        backgroundColor: "#ffe6e6"
+    }
 
-    // const visibleRef = useRef();
-    // const passwordInputRef = useRef();
+    const okStyle = {
+        borderColor: "#0ea5e9",
+        backgroundColor: "#ffffff"
+    }
 
-    // useEffect(() => {
-    //     visibleRef.current.src = passwordVisible ? "svgs/visible.svg" : "svgs/notVisible.svg";
-    //     passwordInputRef.current.type = passwordVisible ? "text" : "password";
-    // }, [passwordVisible]);
 
-    // const handleToggleVisible = () => {
-    //     setPasswordVisible(!passwordVisible);
-    // };
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [loginData, setLoginData] = useState({ username: "", password: "" });
 
-    // const handleChange = e => {
-    //     setLoginData(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
-    // };
+    const passwordRef = useRef();
+    const usernameRef = useRef();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        passwordRef.current.nextSibling.src = passwordVisible ? "svgs/visible.svg" : "svgs/notVisible.svg";
+        passwordRef.current.type = passwordVisible ? "text" : "password";
+    }, [passwordVisible]);
+
+    const applyStyles = (element, styles) => {
+        for (const property in styles) {
+            if (styles.hasOwnProperty(property)) {
+                element.style[property] = styles[property];
+            }
+        }
+    }
+
+    const resetStyle = () => {
+        applyStyles(passwordRef.current, okStyle);
+        applyStyles(usernameRef.current, okStyle);
+    }
+
+    const handleToggleVisible = () => {
+        setPasswordVisible(!passwordVisible);
+    };
+
+    const handleChange = e => {
+        resetStyle();
+        setLoginData(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
+    };
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        let res = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(loginData)
+        })
+
+        let data = await res.json();
+
+        if (data.userfound) {
+            toastSuccess(`Logged in as ${data.fullname}.`);
+            navigate("/");
+        } else if (!data.userfound && !data.error) {
+            if (data.incorrectfield === "username") {
+                toastError(`Invalid username or email.`);
+                resetStyle();
+                applyStyles(usernameRef.current, errorStyle);
+            }
+            else {
+                toastError("Invalid Password");
+                resetStyle();
+                applyStyles(passwordRef.current, errorStyle);
+            }
+        } else {
+            toastError("Error while logging in!");
+            resetStyle();
+        }
+        console.log(data);
+
+    }
 
     return (
         <div className="fixed inset-0 -z-10 h-full w-full bg-sky-50 bg-[linear-gradient(to_right,#0ea5e90a_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e90a_1px,transparent_1px)] bg-[size:14px_24px]">
@@ -29,30 +93,38 @@ const Login = () => {
                 <h3 className="text-sky-500">Secure Your Access</h3>
                 <form className="flex flex-col gap-4 w-full md:w-11/12 lg:w-1/2 my-8 items-center">
                     <section className="w-full">
-                        <input 
-                            required 
-                            name="username" 
-                            placeholder="Enter Username" 
-                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg" 
-                            type="text" 
+                        <input
+                            onChange={handleChange}
+                            value={loginData.username}
+                            ref={usernameRef}
+                            required
+                            name="username"
+                            placeholder="Enter Username or Email"
+                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
+                            type="text"
                         />
                     </section>
                     <section className="w-full relative">
-                        <input 
-                            required 
-                            name="password" 
-                            placeholder="Enter Password" 
-                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg" 
-                            type="password" 
+                        <input
+                            required
+                            onChange={handleChange}
+                            value={loginData.password}
+                            ref={passwordRef}
+                            name="password"
+                            placeholder="Enter Password"
+                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
+                            type="password"
                         />
-                        <img 
-                            className="absolute top-[5px] right-[8px] cursor-pointer" 
-                            src="svgs/notVisible.svg" 
-                            alt="Toggle Visibility" 
+                        <img
+                            onClick={handleToggleVisible}
+                            className="absolute top-[5px] right-[8px] cursor-pointer"
+                            src="svgs/notVisible.svg"
+                            alt="Toggle Visibility"
                         />
                     </section>
-                    <button 
-                        className="bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors duration-400 p-2 w-fit flex items-center text-sm lg:text-lg" 
+                    <button
+                        onClick={handleLogin}
+                        className="bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors duration-400 p-2 w-fit flex items-center text-sm lg:text-lg"
                         type="submit">
                         <img src="svgs/save.svg" alt="Login" className="mr-1 size-4 lg:size-5" />
                         Login
