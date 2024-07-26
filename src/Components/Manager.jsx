@@ -211,7 +211,7 @@ const Manager = () => {
 									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700">{item.sitename}</td>
 									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-2">{item.username}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="../svgs/copy.svg" alt="copy Text" /></div></td>
 									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-2 text-password">{item.password}<img onClick={() => copyText(item.password)} className="w-5 cursor-pointer" src="../svgs/copy.svg" alt="copy Text" /></div></td>
-									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-3"><img onClick={handleEachPassword} src="../svgs/notVisible.svg" alt="" /><img className="cursor-pointer" onClick={() => handleEdit(item._id)} src="../svgs/edit.svg" alt="Edit" /><img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="../svgs/delete.svg" alt="Delete" /></div></td>
+									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-3"><img className="cursor-pointer" onClick={handleEachPassword} src="../svgs/notVisible.svg" alt="" /><img className="cursor-pointer" onClick={() => handleEdit(item._id)} src="../svgs/edit.svg" alt="Edit" /><img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="../svgs/delete.svg" alt="Delete" /></div></td>
 								</tr>
 							})}
 
