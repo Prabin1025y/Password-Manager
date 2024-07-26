@@ -12,6 +12,8 @@ export const toastSuccess = (message) => {
         theme: "colored",
     });
 }
+// const div=document.createElement("div");
+// div.classList.toggle()
 
 export const toastError = (message) => {
     toast.error(message, {

@@ -24,7 +24,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/home/:id", isAuthenticated, async (req, res) => {
-    console.log(req.params.id);
     const passwords = await PasswordDB.find({ userID: req.params.id })
     // console.log(req.cookies);
     // console.log(passwords);
@@ -34,12 +33,12 @@ app.get("/home/:id", isAuthenticated, async (req, res) => {
 app.get("/delete/:id", isAuthenticated, async (req, res) => {
     await PasswordDB.findByIdAndDelete(req.params.id);
     console.log("Data Deleted With ID " + req.params.id);
-    res.redirect("/");
+    res.redirect("/home/"+ req.user._id);
 });
 
 
 
-app.post("/edit/:id", async (req, res) => {
+app.post("/edit/:id", isAuthenticated, async (req, res) => {
     const { sitename, username, password } = req.body;
     await PasswordDB.findByIdAndUpdate(req.params.id, {
         sitename,
@@ -47,7 +46,7 @@ app.post("/edit/:id", async (req, res) => {
         password
     })
     console.log("Data Updated With ID " + req.params.id);
-    res.redirect("/");
+    res.redirect("/home/" + req.user._id);
 })
 
 app.post("/home/:id", async (req, res) => {

@@ -40,7 +40,7 @@ const Manager = () => {
 	};
 
 	useEffect(() => {
-		visibleRef.current.src = passwordVisible ? "svgs/visible.svg" : "svgs/notVisible.svg";
+		visibleRef.current.src = passwordVisible ? "../svgs/visible.svg" : "../svgs/notVisible.svg";
 		passwordInputRef.current.type = passwordVisible ? "text" : "password";
 	}, [passwordVisible]);
 
@@ -83,7 +83,9 @@ const Manager = () => {
 			// localStorage.setItem("userData", JSON.stringify(users.filter(item => item.id !== id)));
 
 			//Using MongoDB
-			await fetch("http://localhost:3000/delete/" + id);
+			await fetch("http://localhost:3000/delete/" + id, {
+				credentials: "include"
+			});
 			getPasswords();
 
 			toastSuccess("Data Deleted!");
@@ -117,7 +119,8 @@ const Manager = () => {
 						headers: {
 							"Content-Type": "application/json"
 						},
-						body: JSON.stringify(userData)
+						body: JSON.stringify(userData),
+						credentials: "include"
 					})
 
 					getPasswords();
@@ -130,7 +133,6 @@ const Manager = () => {
 
 				// while using local storage
 				// localStorage.setItem("userData", JSON.stringify([...users, { ...userData, id: uuidv4() }]));
-
 
 				//while using mongodb
 				console.log(currentUserId);
@@ -152,6 +154,11 @@ const Manager = () => {
 		} else {
 			toastError("Please Fill all Credentials");
 		}
+	};
+
+	const handleEachPassword = (e) => {
+		e.target.src = e.target.src == "http://localhost:5173/svgs/notVisible.svg" ? "../svgs/visible.svg" : "../svgs/notVisible.svg";
+		e.target.parentElement.parentElement.previousSibling.firstElementChild.classList.toggle("text-password");
 	};
 
 	const copyText = (text) => {
@@ -178,13 +185,11 @@ const Manager = () => {
 						<input required value={userData.username} onChange={handleChange} name="username" placeholder="Enter Username" className="border p-1 px-3 focus-visible:outline-sky-700 text-sky-800 focus:border-sky-700 border-sky-500 rounded-full w-full text-sm lg:text-lg" type="text" />
 						<div className="w-full  relative">
 							<input required value={userData.password} onChange={handleChange} name="password" ref={passwordInputRef} placeholder="Enter Password" className="border p-1 px-3 focus-visible:outline-sky-700 text-sky-800 focus:border-sky-700 border-sky-500 rounded-full w-full text-sm lg:text-lg" type="password" />
-							<img ref={visibleRef} className="absolute top-[5px] right-[8px] cursor-pointer" onClick={handleToogleVisible} src="svgs/notVisible.svg" alt="" />
+							<img ref={visibleRef} className="absolute top-[8px] right-[8px] cursor-pointer" onClick={handleToogleVisible} src="../svgs/notVisible.svg" alt="visible" />
 						</div>
 					</section>
 					<button onClick={handleAddData} className="bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors duration-400 p-2 w-fit flex items-center text-sm lg:text-lg" type="submit">
-						{/* <img src="Gifs/add-file.gif" alt="" /> */}
-						{/* <lord-icon src="https://cdn.lordicon.com/jgnvfzqg.json" trigger="hover" colors="primary:#ffffff" className="w-[2px] h-[2px]"></lord-icon> */}
-						<img src="svgs/save.svg" alt="save" className="mr-1 size-4 lg:size-5" />
+						<img src="../svgs/save.svg" alt="save" className="mr-1 size-4 lg:size-5" />
 						Save
 					</button>
 				</form>
@@ -204,9 +209,9 @@ const Manager = () => {
 							{users.map((item, index) => {
 								return <tr key={index}>
 									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700">{item.sitename}</td>
-									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-2">{item.username}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></div></td>
-									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-2">{item.password}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></div></td>
-									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-3"><img className="cursor-pointer" onClick={() => handleEdit(item._id)} src="svgs/edit.svg" alt="Edit" /><img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="svgs/delete.svg" alt="Delete" /></div></td>
+									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-2">{item.username}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="../svgs/copy.svg" alt="copy Text" /></div></td>
+									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-2 text-password">{item.password}<img onClick={() => copyText(item.password)} className="w-5 cursor-pointer" src="../svgs/copy.svg" alt="copy Text" /></div></td>
+									<td className="text-sm lg:text-lg px-6 py-4 border-b border-sky-700"><div className="flex gap-3"><img onClick={handleEachPassword} src="../svgs/notVisible.svg" alt="" /><img className="cursor-pointer" onClick={() => handleEdit(item._id)} src="../svgs/edit.svg" alt="Edit" /><img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="../svgs/delete.svg" alt="Delete" /></div></td>
 								</tr>
 							})}
 
@@ -217,11 +222,11 @@ const Manager = () => {
 							return <div key={index} className="bg-sky-100  pb-4">
 								<div className="bg-sky-800 text-white px-3 py-1">{item.sitename}</div>
 								<div className="p-1 pl-8">
-									<p className="flex gap-2 flex-wrap"><span className="font-bold">username:</span> {item.username}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></p>
-									<p className="flex gap-2"><span className="font-bold">password:</span> {item.password}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="svgs/copy.svg" alt="copy Text" /></p>
+									<p className="flex gap-2 flex-wrap"><span className="font-bold">username:</span> {item.username}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="../svgs/copy.svg" alt="copy Text" /></p>
+									<p className="flex gap-2"><span className="font-bold">password:</span> {item.password}<img onClick={() => copyText(item.username)} className="w-5 cursor-pointer" src="../svgs/copy.svg" alt="copy Text" /></p>
 									<div className="flex gap-3 text-lg">
-										<img className="cursor-pointer" onClick={() => handleEdit(item._id)} src="svgs/edit.svg" alt="Edit" />
-										<img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="svgs/delete.svg" alt="Delete" />
+										<img className="cursor-pointer" onClick={() => handleEdit(item._id)} src="../svgs/edit.svg" alt="Edit" />
+										<img className="cursor-pointer" onClick={() => handleDelete(item._id)} src="../svgs/delete.svg" alt="Delete" />
 									</div>
 								</div>
 							</div>

@@ -48,7 +48,7 @@ const Login = () => {
 
         if (data.userfound) {
             toastSuccess(`Logged in as ${data.fullname}.`);
-            navigate(`/${data.userid}`);
+            navigate(`/home/${data.userid}`);
         } else if (!data.userfound && !data.error) {
             if (data.incorrectfield === "username") {
                 toastError(`Invalid username or email.`);
@@ -84,7 +84,7 @@ const Login = () => {
                             required
                             name="username"
                             placeholder="Enter Username or Email"
-                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
+                            className="rounded-full p-1 px-3 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
                             type="text"
                         />
                     </section>
@@ -96,12 +96,12 @@ const Login = () => {
                             ref={passwordRef}
                             name="password"
                             placeholder="Enter Password"
-                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
+                            className="rounded-full p-1 px-3 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
                             type="password"
                         />
                         <img
                             onClick={handleToggleVisible}
-                            className="absolute top-[5px] right-[8px] cursor-pointer"
+                            className="absolute top-[8px] right-[8px] cursor-pointer"
                             src="svgs/notVisible.svg"
                             alt="Toggle Visibility"
                         />

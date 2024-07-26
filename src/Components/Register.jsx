@@ -128,7 +128,7 @@ const Register = () => {
                             required
                             name="fullname"
                             placeholder="Enter Full Name"
-                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
+                            className="rounded-full p-1 px-3 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
                             type="text"
                         />
                     </section>
@@ -141,7 +141,7 @@ const Register = () => {
                             required
                             name="username"
                             placeholder="Enter Username"
-                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
+                            className="rounded-full p-1 px-3 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
                             type="text"
                         />
                     </section>
@@ -154,7 +154,7 @@ const Register = () => {
                             required
                             name="email"
                             placeholder="Enter Email"
-                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
+                            className="rounded-full p-1 px-3 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
                             type="email"
                         />
                     </section>
@@ -168,7 +168,7 @@ const Register = () => {
                             required
                             name="password"
                             placeholder="Enter Password"
-                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
+                            className="rounded-full p-1 px-3 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
                             type="password"
                         />
                         <img
@@ -186,7 +186,7 @@ const Register = () => {
                             ref={confirmPasswordRef}
                             name="confirmPassword"
                             placeholder="Confirm Password"
-                            className="rounded-full p-1 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
+                            className="rounded-full p-1 px-3 text-sky-800 focus-visible:outline-sky-700 border border-sky-500 w-full text-sm lg:text-lg"
                             type="password"
                         />
                         <img
