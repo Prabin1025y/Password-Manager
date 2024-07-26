@@ -1,19 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toastSuccess, toastError } from "../Utilities/toast";
+import { applyErrorStyles, applyOkStyles } from "../Utilities/styleManager";
 // import { toast } from "react-toastify";
 
 const Login = () => {
-    const errorStyle = {
-        borderColor: "red",
-        backgroundColor: "#ffe6e6"
-    }
-
-    const okStyle = {
-        borderColor: "#0ea5e9",
-        backgroundColor: "#ffffff"
-    }
-
 
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [loginData, setLoginData] = useState({ username: "", password: "" });
@@ -27,17 +18,9 @@ const Login = () => {
         passwordRef.current.type = passwordVisible ? "text" : "password";
     }, [passwordVisible]);
 
-    const applyStyles = (element, styles) => {
-        for (const property in styles) {
-            if (styles.hasOwnProperty(property)) {
-                element.style[property] = styles[property];
-            }
-        }
-    }
-
     const resetStyle = () => {
-        applyStyles(passwordRef.current, okStyle);
-        applyStyles(usernameRef.current, okStyle);
+        applyOkStyles(passwordRef.current);
+        applyOkStyles(usernameRef.current);
     }
 
     const handleToggleVisible = () => {
@@ -57,24 +40,25 @@ const Login = () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(loginData)
+            body: JSON.stringify(loginData),
+            credentials: "include"
         })
 
         let data = await res.json();
 
         if (data.userfound) {
             toastSuccess(`Logged in as ${data.fullname}.`);
-            navigate("/");
+            navigate(`/${data.userid}`);
         } else if (!data.userfound && !data.error) {
             if (data.incorrectfield === "username") {
                 toastError(`Invalid username or email.`);
                 resetStyle();
-                applyStyles(usernameRef.current, errorStyle);
+                applyErrorStyles(usernameRef.current);
             }
             else {
                 toastError("Invalid Password");
                 resetStyle();
-                applyStyles(passwordRef.current, errorStyle);
+                applyErrorStyles(passwordRef.current);
             }
         } else {
             toastError("Error while logging in!");

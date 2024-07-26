@@ -1,18 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toastError, toastSuccess } from "../Utilities/toast";
+import { applyErrorStyles, applyOkStyles } from "../Utilities/styleManager";
 
 const Register = () => {
-
-    const errorStyle = {
-        borderColor: "red",
-        backgroundColor: "#ffe6e6"
-    }
-
-    const okStyle = {
-        borderColor: "#0ea5e9",
-        backgroundColor: "#ffffff"
-    }
 
     const visibleEyeSvg = "svgs/visible.svg";
     const notVisibleEyeSvg = "svgs/notVisible.svg";
@@ -54,20 +45,11 @@ const Register = () => {
     }, [passwordVisible]);
 
 
-
-    const applyStyles = (element, styles) => {
-        for (const property in styles) {
-            if (styles.hasOwnProperty(property)) {
-                element.style[property] = styles[property];
-            }
-        }
-    }
-
     const resetStyle = () => {
-        applyStyles(passwordRef.current, okStyle);
-        applyStyles(confirmPasswordRef.current, okStyle);
-        applyStyles(usernameRef.current, okStyle);
-        applyStyles(emailRef.current, okStyle);
+        applyOkStyles(passwordRef.current);
+        applyOkStyles(confirmPasswordRef.current);
+        applyOkStyles(usernameRef.current);
+        applyOkStyles(emailRef.current);
     }
 
 
@@ -88,20 +70,11 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         if (passwordRef.current.value !== confirmPasswordRef.current.value) {
-            toast.error('Passwords didn\'t matched', {
-                position: "bottom-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-            });
+            toastError('Passwords didn\'t matched');
 
             resetStyle();
-            applyStyles(passwordRef.current, errorStyle);
-            applyStyles(confirmPasswordRef.current, errorStyle);
+            applyErrorStyles(passwordRef.current);
+            applyErrorStyles(confirmPasswordRef.current);
 
 
         } else {
@@ -114,56 +87,25 @@ const Register = () => {
                 body: JSON.stringify(registrationData)
             })
             let data = await res.json();
-            if (data.usercreated) {
-                toast.success('Registration Successful', {
-                    position: "bottom-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: false,
-                    progress: undefined,
-                    theme: "colored",
-                });
 
+            if (data.usercreated ) {
+                toastSuccess("Registration Successful");
                 resetStyle();
-                // setregistrationData({ fullname: "", username: "", password: "", email: "" })
-                // confirmPasswordRef.current.value = "";
                 navigate("/login");
-
-
 
             } else if (!data.usercreated && data.errorcode === 11000) {
                 console.log(data.duplicatedkey);
-                toast.error(data.duplicatedkey === "username" ? "username not available" : "email is already in use", {
-                    position: "bottom-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: false,
-                    progress: undefined,
-                    theme: "colored",
-                });
+                toastError(data.duplicatedkey === "username" ? "username not available" : "email is already in use");
                 if (data.duplicatedkey === "username") {
                     console.log("error");
                     resetStyle();
-                    applyStyles(usernameRef.current, errorStyle);
+                    applyErrorStyles(usernameRef.current);
                 } else {
                     resetStyle();
-                    applyStyles(emailRef.current, errorStyle);
+                    applyErrorStyles(emailRef.current);
                 }
             } else {
-                toast.error(`Error in registering. error code ${data.errorcode}`, {
-                    position: "bottom-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: false,
-                    progress: undefined,
-                    theme: "colored",
-                });
+                toastError(`Error in registering. error code ${data.errorcode}`);
             }
 
         }
@@ -171,7 +113,6 @@ const Register = () => {
 
 
     return (<>
-        {/* <ToastContainer pauseOnFocusLoss={false} /> */}
         <div className="fixed inset-0 -z-10 h-full w-full bg-sky-50 bg-[linear-gradient(to_right,#0ea5e90a_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e90a_1px,transparent_1px)] bg-[size:14px_24px]">
             <div className="container mx-auto p-10 flex flex-col items-center">
                 <h1 className="text-3xl font-bold">
@@ -241,6 +182,7 @@ const Register = () => {
                         <label className="text-lg font-bold px-4  text-sky-600" htmlFor="confirmPassword">Confirm Password:</label>
                         <input
                             required
+                            onChange={handleChange}
                             ref={confirmPasswordRef}
                             name="confirmPassword"
                             placeholder="Confirm Password"

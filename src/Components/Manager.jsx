@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
+import { toastError, toastInfo, toastSuccess } from "../Utilities/toast";
+import { useNavigate } from "react-router-dom";
+import Authentication from "../Utilities/Authentication";
 
 const Manager = () => {
 	const [passwordVisible, setPasswordVisible] = useState(false);
@@ -10,12 +13,31 @@ const Manager = () => {
 	const [users, setusers] = useState([]);
 
 
-
+	const { currentUserId } = useParams();
 	const visibleRef = useRef();
 	const passwordInputRef = useRef();
+	const navigate = useNavigate();
 
+	const getPasswords = async () => {
+		let res = await fetch("http://localhost:3000/home/" + currentUserId, { credentials: "include" });
+		let data = await res.json();
+		console.log(data);
 
+		let isAuthenticated = Authentication(data);
+		if (!isAuthenticated)
+			navigate("/login")
+		// if(!data.isAuthenticated && !data.error){
+		// 	toastError("Please Login First!");
+		// 	navigate("/login");
+		// }else if(data.error){
+		// 	toastError("Some Error Occurred. Please Log In");
+		// 	navigate("/login");
+		// }
 
+		// console.log(data);
+		if (data.passwords)
+			setusers(data.passwords)
+	};
 
 	useEffect(() => {
 		visibleRef.current.src = passwordVisible ? "svgs/visible.svg" : "svgs/notVisible.svg";
@@ -38,14 +60,7 @@ const Manager = () => {
 
 
 
-	const getPasswords = async () => {
-		let res = await fetch("http://localhost:3000/");
-		let data = await res.json();
 
-		// console.log(data);
-		if (data)
-			setusers(data)
-	};
 
 
 
@@ -71,17 +86,7 @@ const Manager = () => {
 			await fetch("http://localhost:3000/delete/" + id);
 			getPasswords();
 
-
-			toast.success("Data Deleted!!", {
-				position: "bottom-right",
-				autoClose: 4000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: false,
-				draggable: false,
-				progress: undefined,
-				theme: "colored",
-			})
+			toastSuccess("Data Deleted!");
 		}
 	}
 
@@ -117,17 +122,7 @@ const Manager = () => {
 
 					getPasswords();
 
-
-					toast.success("Credentials Updated", {
-						position: "bottom-right",
-						autoClose: 4000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: false,
-						draggable: false,
-						progress: undefined,
-						theme: "colored",
-					});
+					toastSuccess("Credentials Updated");
 				}
 			} else {
 				// setusers([...users, userData]);
@@ -138,7 +133,8 @@ const Manager = () => {
 
 
 				//while using mongodb
-				await fetch("http://localhost:3000/", {
+				console.log(currentUserId);
+				await fetch("http://localhost:3000/home/" + currentUserId, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
@@ -151,44 +147,16 @@ const Manager = () => {
 
 
 
-
-				toast.success("Credentials Saved", {
-					position: "bottom-right",
-					autoClose: 4000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: false,
-					draggable: false,
-					progress: undefined,
-					theme: "colored",
-				});
+				toastSuccess("Credentials Saved.");
 			}
 		} else {
-			toast.error("Please Fill all Credentials", {
-				position: "bottom-right",
-				autoClose: 4000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: false,
-				draggable: false,
-				progress: undefined,
-				theme: "colored",
-			});
+			toastError("Please Fill all Credentials");
 		}
 	};
 
 	const copyText = (text) => {
 		navigator.clipboard.writeText(text);
-		toast.info('Copied to ClipBoard', {
-			position: "bottom-right",
-			autoClose: 1000,
-			hideProgressBar: false,
-			closeOnClick: true,
-			pauseOnHover: false,
-			draggable: false,
-			progress: undefined,
-			theme: "colored",
-		});
+		toastInfo("Copied to Clipboard");
 	}
 
 	// console.log(users);
