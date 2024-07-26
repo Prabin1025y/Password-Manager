@@ -3,6 +3,7 @@ import Login from "./Components/Login";
 import Manager from "./Components/Manager";
 import Register from "./Components/Register";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import WelcomePage from "./Components/Welcome";
 
 // import './App.css'
 
@@ -20,6 +21,10 @@ function App() {
 		{
 			path: "/register",
 			element: <Register />,
+		},
+		{
+			path: "/",
+			element: <WelcomePage />,
 		},
 	]);
 

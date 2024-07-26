@@ -15,3 +15,7 @@
     box-sizing: border-box;
     /* color:#e8f0fe; */
 }
+
+body{
+    overflow: hidden;
+}

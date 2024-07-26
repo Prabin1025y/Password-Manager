@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import 'react-toastify/dist/ReactToastify.css';
-import { useParams } from "react-router-dom";
+import { redirect, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import { toastError, toastInfo, toastSuccess } from "../Utilities/toast";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ const Manager = () => {
 
 
 	const { currentUserId } = useParams();
+	const currentUser = useRef();
 	const visibleRef = useRef();
 	const passwordInputRef = useRef();
 	const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Manager = () => {
 	const getPasswords = async () => {
 		let res = await fetch("http://localhost:3000/home/" + currentUserId, { credentials: "include" });
 		let data = await res.json();
-		console.log(data);
+		// console.log(data);
 
 		let isAuthenticated = Authentication(data);
 		if (!isAuthenticated)
@@ -34,7 +35,7 @@ const Manager = () => {
 		// 	navigate("/login");
 		// }
 
-		// console.log(data);
+		currentUser.current = data.user;
 		if (data.passwords)
 			setusers(data.passwords)
 	};
@@ -102,7 +103,7 @@ const Manager = () => {
 			if (userData._id) {
 				let index = users.findIndex(item => item._id === userData._id);
 				// let updatedArray = users;
-				console.log(index);
+				// console.log(index);
 
 				if (index !== -1) {
 					// updatedArray = [...users.slice(0, index),
@@ -141,20 +142,24 @@ const Manager = () => {
 					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify(userData)
+					body: JSON.stringify(userData),
+					credentials:"include"
 				})
-
 				getPasswords();
-
-
-
-
 				toastSuccess("Credentials Saved.");
 			}
 		} else {
 			toastError("Please Fill all Credentials");
 		}
 	};
+
+	const handleLogOut = async () => {
+		await fetch("http://localhost:3000/logout",{
+			credentials:"include"
+		});
+		toastSuccess("Logged Out.");
+		navigate("/login");
+	}
 
 	const handleEachPassword = (e) => {
 		e.target.src = e.target.src == "http://localhost:5173/svgs/notVisible.svg" ? "../svgs/visible.svg" : "../svgs/notVisible.svg";
@@ -169,7 +174,7 @@ const Manager = () => {
 	// console.log(users);
 	return (
 		<>
-			<Navbar />
+			<Navbar handleLogOut={handleLogOut} currentUser={currentUser.current}/>
 			{/* <ToastContainer pauseOnFocusLoss={false} /> */}
 			<div className="fixed inset-0 -z-10 h-full w-full bg-sky-50 bg-[linear-gradient(to_right,#0ea5e90a_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e90a_1px,transparent_1px)] bg-[size:14px_24px]">{/* <div class="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-sky-500 opacity-20 blur-[100px]"></div> */}</div>
 			<div className="container mx-auto p-10 flex flex-col items-center">

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toastError, toastSuccess } from "../Utilities/toast";
 import { applyErrorStyles, applyOkStyles } from "../Utilities/styleManager";
+import NavbarSecondary from "./NavbarSecondary";
 
 const Register = () => {
 
@@ -88,7 +89,7 @@ const Register = () => {
             })
             let data = await res.json();
 
-            if (data.usercreated ) {
+            if (data.usercreated) {
                 toastSuccess("Registration Successful");
                 resetStyle();
                 navigate("/login");
@@ -113,8 +114,9 @@ const Register = () => {
 
 
     return (<>
+        <NavbarSecondary />
         <div className="fixed inset-0 -z-10 h-full w-full bg-sky-50 bg-[linear-gradient(to_right,#0ea5e90a_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e90a_1px,transparent_1px)] bg-[size:14px_24px]">
-            <div className="container mx-auto p-10 flex flex-col items-center">
+            <div className="container mx-auto p-10 mt-8  flex flex-col items-center">
                 <h1 className="text-3xl font-bold">
                     <span className="text-sky-500">&#123;</span> Register<span className="text-sky-500"> &#125;</span>
                 </h1>
@@ -203,6 +205,7 @@ const Register = () => {
                         Register
                     </button>
                 </form>
+                <p className="text-sky-800">Already have an account? <Link to="/login" className="underline">Login here</Link></p>
             </div>
         </div>
     </>

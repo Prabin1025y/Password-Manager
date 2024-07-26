@@ -1,7 +1,6 @@
 import { toastError } from "./toast";
 
 const Authentication = (data) => {
-    console.log(data.isAuthenticated);
     if (!data.isAuthenticated && !data.error) {
         toastError("Please Login First!");
         return false;

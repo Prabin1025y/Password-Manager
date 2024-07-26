@@ -23,18 +23,30 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", isAuthenticated, (req, res) => {
+    console.log(req.user);
+    res.send({ loggenIn: true, userid: req.user.userId });
+})
+
 app.get("/home/:id", isAuthenticated, async (req, res) => {
     const passwords = await PasswordDB.find({ userID: req.params.id })
     // console.log(req.cookies);
     // console.log(passwords);
-    res.send({ passwords, isAuthenticated: true });
+    // console.log(req.user);
+    const currentUser = await UserDB.findById(req.user.userId);
+    res.send({ passwords, isAuthenticated: true, user: { fullname: currentUser.fullname, date: currentUser.userCreated } });
 })
 
 app.get("/delete/:id", isAuthenticated, async (req, res) => {
     await PasswordDB.findByIdAndDelete(req.params.id);
     console.log("Data Deleted With ID " + req.params.id);
-    res.redirect("/home/"+ req.user._id);
+    res.redirect("/home/" + req.user._id);
 });
+
+app.get("/logout", isAuthenticated, (req, res) => {
+    res.clearCookie("token");
+    res.send("Logged Out");
+})
 
 
 
@@ -49,9 +61,8 @@ app.post("/edit/:id", isAuthenticated, async (req, res) => {
     res.redirect("/home/" + req.user._id);
 })
 
-app.post("/home/:id", async (req, res) => {
+app.post("/home/:id", isAuthenticated, async (req, res) => {
     console.log("Data Inserted Successfully");
-    res.send(req.body);
     const { sitename, username, password } = req.body;
 
     await PasswordDB.create({
@@ -60,6 +71,7 @@ app.post("/home/:id", async (req, res) => {
         password,
         userID: req.params.id,
     })
+    res.send(req.body);
 })
 
 app.post("/register", async (req, res) => {
@@ -72,12 +84,14 @@ app.post("/register", async (req, res) => {
             username,
             password: bcrypt.hashSync(password, 12),
             email,
+            userCreated: new Date(Date.now()).toDateString()
         });
         res.send({ usercreated: true });
     } catch (error) {
         if (error.code === 11000) {
             res.send({ usercreated: false, duplicatedkey: Object.keys(error.keyValue)[0], errorcode: error.code })
         } else {
+            console.log(error);
             res.send({ usercreated: false, errorcode: error })
         }
     }

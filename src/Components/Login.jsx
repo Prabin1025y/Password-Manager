@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toastSuccess, toastError } from "../Utilities/toast";
 import { applyErrorStyles, applyOkStyles } from "../Utilities/styleManager";
+import NavbarSecondary from "./NavbarSecondary";
 // import { toast } from "react-toastify";
 
 const Login = () => {
@@ -68,9 +69,10 @@ const Login = () => {
 
     }
 
-    return (
+    return (<>
+        <NavbarSecondary />
         <div className="fixed inset-0 -z-10 h-full w-full bg-sky-50 bg-[linear-gradient(to_right,#0ea5e90a_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e90a_1px,transparent_1px)] bg-[size:14px_24px]">
-            <div className="container mx-auto p-10 flex flex-col items-center">
+            <div className="container mx-auto p-10 mt-8 flex flex-col items-center">
                 <h1 className="text-3xl font-bold">
                     <span className="text-sky-500">&#123;</span> Login<span className="text-sky-500"> &#125;</span>
                 </h1>
@@ -114,8 +116,9 @@ const Login = () => {
                         Login
                     </button>
                 </form>
+                <p className="text-sky-800">First time? <Link to="/register" className="underline">Register here</Link></p>
             </div>
-        </div>
+        </div></>
     );
 };
 
