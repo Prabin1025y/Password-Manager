@@ -126,7 +126,7 @@ app.post("/login", async (req, res) => {
                 const token = jsonwebtoken.sign({ userId: user._id }, process.env.SECRET, { expiresIn: "10d" });
                 res.cookie("token", token, {
                     httpOnly: true, // Ensures the cookie is not accessible via JavaScript
-                    secure: false, // Ensures the cookie is sent only over HTTPS in production
+                    secure: true, // Ensures the cookie is sent only over HTTPS in production
                 });
                 // console.log(req.cookies);
                 res.send({ userfound: true, error: false, fullname: user.fullname, userid: user._id });
