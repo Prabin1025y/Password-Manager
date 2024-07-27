@@ -1,7 +1,5 @@
 {
     "version": 2,
-    "installCommand": "bun install",
-    "devCommand": "bun dev",
     "builds": [
         {
             "src": "*.js",
