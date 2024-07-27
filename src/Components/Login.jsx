@@ -19,6 +19,19 @@ const Login = () => {
         passwordRef.current.type = passwordVisible ? "text" : "password";
     }, [passwordVisible]);
 
+    useEffect(() => {
+        async function fetching() {
+            const res = await fetch("http://localhost:3000/login", { credentials: "include" })
+            let data = await res.json();
+            if (data.loggedIn) {
+                toastError("Please Log Out First");
+                navigate("/home/" + data.userid)
+            }
+        }
+        fetching();
+    }, [])
+
+
     const resetStyle = () => {
         applyOkStyles(passwordRef.current);
         applyOkStyles(usernameRef.current);
@@ -35,6 +48,13 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        const resp = await fetch("http://localhost:3000/login", { credentials: "include" })
+        let datares = await resp.json();
+        if (datares.loggedIn) {
+            toastError("Please Log Out First");
+            navigate("/home/" + datares.userid)
+            return;
+        }
 
         let res = await fetch("http://localhost:3000/login", {
             method: "POST",

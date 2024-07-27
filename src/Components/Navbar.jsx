@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = ({ handleLogOut, currentUser={} }) => {
 	let profileTimeOut;
-	console.log(currentUser);
+	// console.log(currentUser);
 
 	const profileRef = useRef();
 	const handleProfileView = (e) => {

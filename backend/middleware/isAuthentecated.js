@@ -12,7 +12,7 @@ const isAuthenticated = (req, res, next) => {
         return res.send({ isAuthenticated: false, error: false })
     }
 
-    jsonwebtoken.verify(token, "Prabin Acharya", (err, result) => {
+    jsonwebtoken.verify(token, process.env.SECRET, (err, result) => {
         if (err)
             res.send({ isAuthenticated: false, error: true })
         else {

@@ -8,7 +8,7 @@ const WelcomePage = () => {
         async function fetching() {
             const res = await fetch("http://localhost:3000/", { credentials: "include" })
             let data = await res.json();
-            if (data.loggenIn)
+            if (data.loggedIn)
                 navigate("/home/" + data.userid)
         }
         fetching();

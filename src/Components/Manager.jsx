@@ -20,7 +20,8 @@ const Manager = () => {
 	const navigate = useNavigate();
 
 	const getPasswords = async () => {
-		let res = await fetch("http://localhost:3000/home/" + currentUserId, { credentials: "include" });
+		let res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/home/${currentUserId}`, { credentials: "include" });
+		// let res = await fetch(`http://localhost:3000/home/${currentUserId}`, { credentials: "include" });
 		let data = await res.json();
 		// console.log(data);
 
@@ -75,7 +76,7 @@ const Manager = () => {
 		setuserData(prevstate => ({ ...prevstate, [e.target.name]: e.target.value }));
 	};
 
-	const handleDelete = async (id) => {
+	const handleDelete = async (passwordId) => {
 		// console.log(id);
 		let c = confirm("Do you really want to delete this data?")
 		if (c) {
@@ -84,7 +85,8 @@ const Manager = () => {
 			// localStorage.setItem("userData", JSON.stringify(users.filter(item => item.id !== id)));
 
 			//Using MongoDB
-			await fetch("http://localhost:3000/delete/" + id, {
+			// await fetch("http://localhost:3000/delete/" + id, {
+			await fetch(`${import.meta.env.VITE_BACKEND_URL}/delete/${passwordId}`, {
 				credentials: "include"
 			});
 			getPasswords();
@@ -93,8 +95,8 @@ const Manager = () => {
 		}
 	}
 
-	const handleEdit = (id) => {
-		setuserData(users.filter(item => item._id === id)[0]);
+	const handleEdit = (passwordId) => {
+		setuserData(users.filter(password => password._id === passwordId)[0]);
 	}
 
 	const handleAddData = async e => {
@@ -115,7 +117,8 @@ const Manager = () => {
 					// localStorage.setItem("userData", JSON.stringify([...users.slice(0, index), userData, ...users.slice(index + 1)]));
 
 					//Using MongoDB
-					await fetch("http://localhost:3000/edit/" + userData._id, {
+					// await fetch("http://localhost:3000/edit/" + userData._id, {
+					await fetch(`${import.meta.env.VITE_BACKEND_URL}/edit/${userData._id}`, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json"
@@ -136,14 +139,15 @@ const Manager = () => {
 				// localStorage.setItem("userData", JSON.stringify([...users, { ...userData, id: uuidv4() }]));
 
 				//while using mongodb
-				console.log(currentUserId);
-				await fetch("http://localhost:3000/home/" + currentUserId, {
+				// console.log(currentUserId);
+				// await fetch("http://localhost:3000/home/" + currentUserId, {
+				await fetch(`${import.meta.env.VITE_BACKEND_URL}/home/${currentUserId}`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify(userData),
-					credentials:"include"
+					credentials: "include"
 				})
 				getPasswords();
 				toastSuccess("Credentials Saved.");
@@ -154,15 +158,17 @@ const Manager = () => {
 	};
 
 	const handleLogOut = async () => {
-		await fetch("http://localhost:3000/logout",{
-			credentials:"include"
+		// await fetch("http://localhost:3000/logout", {
+		await fetch(`${import.meta.env.VITE_BACKEND_URL}/logout`, {
+			credentials: "include"
 		});
 		toastSuccess("Logged Out.");
 		navigate("/login");
 	}
 
 	const handleEachPassword = (e) => {
-		e.target.src = e.target.src == "http://localhost:5173/svgs/notVisible.svg" ? "../svgs/visible.svg" : "../svgs/notVisible.svg";
+		// e.target.src = e.target.src == `http://localhost:5173/svgs/notVisible.svg` ? "../svgs/visible.svg" : "../svgs/notVisible.svg";
+		e.target.src = e.target.src == `${import.meta.env.VITE_FRONTEND_URL}/svgs/notVisible.svg` ? "../svgs/visible.svg" : "../svgs/notVisible.svg";
 		e.target.parentElement.parentElement.previousSibling.firstElementChild.classList.toggle("text-password");
 	};
 
@@ -174,7 +180,7 @@ const Manager = () => {
 	// console.log(users);
 	return (
 		<>
-			<Navbar handleLogOut={handleLogOut} currentUser={currentUser.current}/>
+			<Navbar handleLogOut={handleLogOut} currentUser={currentUser.current} />
 			{/* <ToastContainer pauseOnFocusLoss={false} /> */}
 			<div className="fixed inset-0 -z-10 h-full w-full bg-sky-50 bg-[linear-gradient(to_right,#0ea5e90a_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e90a_1px,transparent_1px)] bg-[size:14px_24px]">{/* <div class="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-sky-500 opacity-20 blur-[100px]"></div> */}</div>
 			<div className="container mx-auto p-10 flex flex-col items-center">

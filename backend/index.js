@@ -9,15 +9,15 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import isAuthenticated from './middleware/isAuthentecated.js';
 const PORT = 3000;
+dotenv.config();
 
 const app = express();
 app.use(cookieParser());
 
 ConnectToDB();
 
-dotenv.config();
 app.use(cors({
-    origin: "http://localhost:5173", // Replace with your frontend URL
+    origin: process.env.ORIGIN_CORS, // Replace with your frontend URL
     credentials: true // Allow credentials (cookies) to be sent
 }));
 app.use(express.json());
@@ -25,8 +25,14 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", isAuthenticated, (req, res) => {
     console.log(req.user);
-    res.send({ loggenIn: true, userid: req.user.userId });
+    res.send({ loggedIn: true, userid: req.user.userId });
 })
+
+app.get("/login", isAuthenticated, (req, res) => {
+    console.log(req.user);
+    res.send({ loggedIn: true, userid: req.user.userId });
+})
+
 
 app.get("/home/:id", isAuthenticated, async (req, res) => {
     const passwords = await PasswordDB.find({ userID: req.params.id })
@@ -111,7 +117,7 @@ app.post("/login", async (req, res) => {
         if (user) {
             if (bcrypt.compareSync(password, user.password)) {
                 // console.log("going");
-                const token = jsonwebtoken.sign({ userId: user._id }, "Prabin Acharya", { expiresIn: "10d" });
+                const token = jsonwebtoken.sign({ userId: user._id }, process.env.SECRET, { expiresIn: "10d" });
                 res.cookie("token", token, {
                     httpOnly: true, // Ensures the cookie is not accessible via JavaScript
                     secure: false, // Ensures the cookie is sent only over HTTPS in production

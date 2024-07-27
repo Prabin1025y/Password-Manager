@@ -2,7 +2,7 @@
 import mongoose from "mongoose";
 
 const ConnectToDB = async () => {
-    await mongoose.connect("mongodb://localhost:27017/");
+    await mongoose.connect(process.env.DB_URL);
     console.log("Database Connected");
 }
 
