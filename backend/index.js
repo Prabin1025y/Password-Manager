@@ -29,18 +29,24 @@ app.get("/", isAuthenticated, (req, res) => {
 })
 
 app.get("/login", isAuthenticated, (req, res) => {
-    console.log(req.user);
+    // console.log(req.user);
     res.send({ loggedIn: true, userid: req.user.userId });
 })
 
 
 app.get("/home/:id", isAuthenticated, async (req, res) => {
+    // console.log(UserDB.findById(req.params.id));
+
     const passwords = await PasswordDB.find({ userID: req.params.id })
     // console.log(req.cookies);
     // console.log(passwords);
     // console.log(req.user);
-    const currentUser = await UserDB.findById(req.user.userId);
-    res.send({ passwords, isAuthenticated: true, user: { fullname: currentUser.fullname, date: currentUser.userCreated } });
+    try {
+        const currentUser = await UserDB.findById(req.params.id);
+        res.send({ passwords, isAuthenticated: true, user: { fullname: currentUser.fullname, date: currentUser.userCreated } });
+    } catch (error) {
+        res.send({ passwords, isAuthenticated: true, userid: req.user.userId });
+    }
 })
 
 app.get("/delete/:id", isAuthenticated, async (req, res) => {

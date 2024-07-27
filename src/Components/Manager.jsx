@@ -23,18 +23,15 @@ const Manager = () => {
 		let res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/home/${currentUserId}`, { credentials: "include" });
 		// let res = await fetch(`http://localhost:3000/home/${currentUserId}`, { credentials: "include" });
 		let data = await res.json();
-		// console.log(data);
 
 		let isAuthenticated = Authentication(data);
 		if (!isAuthenticated)
 			navigate("/login")
-		// if(!data.isAuthenticated && !data.error){
-		// 	toastError("Please Login First!");
-		// 	navigate("/login");
-		// }else if(data.error){
-		// 	toastError("Some Error Occurred. Please Log In");
-		// 	navigate("/login");
-		// }
+
+		if (!data.user) {
+			navigate("/");
+			// return;
+		}
 
 		currentUser.current = data.user;
 		if (data.passwords)
