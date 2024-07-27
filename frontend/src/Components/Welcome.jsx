@@ -6,7 +6,7 @@ const WelcomePage = () => {
     const navigate = useNavigate();
     useEffect(() => {
         async function fetching() {
-            const res = await fetch("http://localhost:3000/", { credentials: "include" })
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/`, { credentials: "include" })
             let data = await res.json();
             if (data.loggedIn)
                 navigate("/home/" + data.userid)

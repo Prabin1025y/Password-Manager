@@ -80,7 +80,7 @@ const Register = () => {
 
         } else {
 
-            let res = await fetch("http://localhost:3000/register", {
+            let res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

@@ -21,7 +21,7 @@ const Login = () => {
 
     useEffect(() => {
         async function fetching() {
-            const res = await fetch("http://localhost:3000/login", { credentials: "include" })
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login`, { credentials: "include" })
             let data = await res.json();
             if (data.loggedIn) {
                 toastError("Please Log Out First");
@@ -48,7 +48,7 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        const resp = await fetch("http://localhost:3000/login", { credentials: "include" })
+        const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login`, { credentials: "include" })
         let datares = await resp.json();
         if (datares.loggedIn) {
             toastError("Please Log Out First");
@@ -56,7 +56,7 @@ const Login = () => {
             return;
         }
 
-        let res = await fetch("http://localhost:3000/login", {
+        let res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
