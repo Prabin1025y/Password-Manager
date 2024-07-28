@@ -19,8 +19,6 @@ ConnectToDB();
 app.use(cors({
     origin: process.env.ORIGIN_CORS, // Replace with your frontend URL
     credentials: true, // Allow credentials (cookies) to be sent
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -134,7 +132,6 @@ app.post("/login", async (req, res) => {
                     secure: true, // Ensures the cookie is sent only over HTTPS
                     sameSite: 'None', // Allows cookie to be sent across different domains
                     path: '/',
-                    domain: 'vercel.app', // Replace with your actual domain if needed
                 });
                 console.log("Cookies should be formed", req.cookies);
                 res.send({ userfound: true, error: false, fullname: user.fullname, userid: user._id });

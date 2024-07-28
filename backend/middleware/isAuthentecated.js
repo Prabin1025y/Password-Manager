@@ -6,7 +6,7 @@ const isAuthenticated = (req, res, next) => {
     // console.log('Signed Cookies:', req.signedCookies); // Inspect the signed cookies
     // console.log(req);
     const token = req.cookies.token;
-    // console.log(req.cookies);
+    console.log("from isauthenticated ", req.cookies);
 
     if (!token || token === null) {
         return res.send({ isAuthenticated: false, error: false })
