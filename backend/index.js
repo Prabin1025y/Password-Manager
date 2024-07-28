@@ -123,11 +123,18 @@ app.post("/login", async (req, res) => {
             if (bcrypt.compareSync(password, user.password)) {
                 console.log("user exists and comparision successful");
                 const token = jsonwebtoken.sign({ userid: user._id }, process.env.SECRET, { expiresIn: "10d" });
-                res.cookie("token", token, {
-                    httpOnly: true, // Ensures the cookie is not accessible via JavaScript
-                    secure: true, // Ensures the cookie is sent only over HTTPS in production
+                //res.cookie("token", token, {
+                //     httpOnly: true, // Ensures the cookie is not accessible via JavaScript
+                //     secure: true, // Ensures the cookie is sent only over HTTPS in production
+                // });
+                res.cookie('token', token, {
+                    httpOnly: true,
+                    secure: true, // Ensures the cookie is sent only over HTTPS
+                    sameSite: 'None', // Allows cookie to be sent across different domains
+                    path: '/',
+                    domain: 'vercel.app', // Replace with your actual domain if needed
                 });
-                console.log("Cookies should be formed", token);
+                console.log("Cookies should be formed", req.cookies);
                 res.send({ userfound: true, error: false, fullname: user.fullname, userid: user._id });
             }
             else
