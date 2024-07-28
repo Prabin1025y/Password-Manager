@@ -36,7 +36,6 @@ app.get("/login", isAuthenticated, (req, res) => {
 
 app.get("/home/:id", isAuthenticated, async (req, res) => {
     // console.log(UserDB.findById(req.params.id));
-
     const passwords = await PasswordDB.find({ userID: req.params.id })
     // console.log(req.cookies);
     // console.log(passwords);
@@ -119,7 +118,7 @@ app.post("/login", async (req, res) => {
         ]
     });
     try {
-        //console.log(user);
+        // console.log(user);
         if (user) {
             if (bcrypt.compareSync(password, user.password)) {
                 // console.log("going");
