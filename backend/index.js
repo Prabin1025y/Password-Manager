@@ -130,8 +130,6 @@ app.post("/login", async (req, res) => {
                 res.cookie('token', token, {
                     httpOnly: true,
                     secure: true, // Ensures the cookie is sent only over HTTPS
-                    sameSite: 'None', // Allows cookie to be sent across different domains
-                    path: '/',
                 });
                 console.log("Cookies should be formed", req.cookies);
                 res.send({ userfound: true, error: false, fullname: user.fullname, userid: user._id });
