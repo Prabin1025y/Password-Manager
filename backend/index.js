@@ -127,7 +127,7 @@ app.post("/login", async (req, res) => {
                     httpOnly: true, // Ensures the cookie is not accessible via JavaScript
                     secure: true, // Ensures the cookie is sent only over HTTPS in production
                 });
-                console.log("Cookies should be formed", req.cookies);
+                console.log("Cookies should be formed", token);
                 res.send({ userfound: true, error: false, fullname: user.fullname, userid: user._id });
             }
             else
