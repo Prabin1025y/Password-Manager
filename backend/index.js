@@ -18,7 +18,9 @@ ConnectToDB();
 
 app.use(cors({
     origin: process.env.ORIGIN_CORS, // Replace with your frontend URL
-    credentials: true // Allow credentials (cookies) to be sent
+    credentials: true, // Allow credentials (cookies) to be sent
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
