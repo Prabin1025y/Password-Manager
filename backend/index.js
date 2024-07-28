@@ -25,12 +25,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", isAuthenticated, (req, res) => {
     console.log(req.user);
-    res.send({ loggedIn: true, userid: req.user.userId });
+    res.send({ loggedIn: true, userid: req.user.userid });
 })
 
 app.get("/login", isAuthenticated, (req, res) => {
     // console.log(req.user);
-    res.send({ loggedIn: true, userid: req.user.userId });
+    res.send({ loggedIn: true, userid: req.user.userid });
 })
 
 
@@ -118,16 +118,16 @@ app.post("/login", async (req, res) => {
         ]
     });
     try {
-        // console.log(user);
+        console.log("this us user0", user);
         if (user) {
             if (bcrypt.compareSync(password, user.password)) {
-                // console.log("going");
-                const token = jsonwebtoken.sign({ userId: user._id }, process.env.SECRET, { expiresIn: "10d" });
+                console.log("user exists and comparision successful");
+                const token = jsonwebtoken.sign({ userid: user._id }, process.env.SECRET, { expiresIn: "10d" });
                 res.cookie("token", token, {
                     httpOnly: true, // Ensures the cookie is not accessible via JavaScript
                     secure: true, // Ensures the cookie is sent only over HTTPS in production
                 });
-                // console.log(req.cookies);
+                console.log("Cookies should be formed", req.cookies);
                 res.send({ userfound: true, error: false, fullname: user.fullname, userid: user._id });
             }
             else
