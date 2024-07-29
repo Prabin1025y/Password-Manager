@@ -2,18 +2,10 @@
 
 Welcome to **PassGuard**! Where security meets simplicity. Manage your passwords with ease and confidence using this lightweight, user-friendly application built with React. PassGuard ensures that your credentials are safely stored and readily accessible whenever you need them.
 
-## Deployment
-the project is deployed in vercel. you can check it out from this link.
-[Passguard](https://passguard1.vercel.app).
-
-There is an error in production where the cookies is not being signed. And for some reason user can login but logout feature doesnot work. This does not occur while running locally so i recommend following below step to check project locally. 
-If you know why this is happening and find any mistake in code, Please feel free to tell me, I would appreciate it. Thank you.
-
 
 ## Table of Contents
 
 - [{ PassGuard }](#-passguard-)
-  - [Deployment](#deployment)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Getting Started](#getting-started)
